@@ -16,25 +16,38 @@ GLWidget::GLWidget(QWidget *parent)
 	kdata = new KinectData();
 	kdata->InitKinect();
 	kdata->Update();
+	//init 
+	// set camerasite at 100 ,100 ,100
+	CameraSite.x= 100;
+	CameraSite.y=100 ;
+	CameraSite.z =100;
+	// set camera face 0,0,0
 
+	CameraFace.x = 0;
+	CameraFace.y= 0 ; 
+	CameraFace.z= 0;
+	// set camera rotate 1,0,0
+	CameraRotate.x = 1;
+	CameraRotate.y = 0;
+	CameraRotate.z = 0;
 }
-
 GLWidget::~GLWidget()
 {
 
 }
 void GLWidget::initializeGL()
 {
-    static const GLfloat lightPos[4] = { 5.0f, 5.0f, 10.0f, 1.0f };
-    static const GLfloat reflectance1[4] = { 0.8f, 0.1f, 0.0f, 1.0f };
-    static const GLfloat reflectance2[4] = { 0.0f, 0.8f, 0.2f, 1.0f };
-    static const GLfloat reflectance3[4] = { 0.2f, 0.2f, 1.0f, 1.0f };
+	static const GLfloat lightPos[4] = { 5.0f, 5.0f, 10.0f, 1.0f };
+	static const GLfloat reflectance1[4] = { 0.8f, 0.1f, 0.0f, 1.0f };
+	static const GLfloat reflectance2[4] = { 0.0f, 0.8f, 0.2f, 1.0f };
+	static const GLfloat reflectance3[4] = { 0.2f, 0.2f, 1.0f, 1.0f };
 
-
-    glEnable(GL_DEPTH_TEST);
-	glEnableClientState(GL_VERTEX_ARRAY);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
-	glClearColor(0.0f,0.0f,0.0f,1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 }
 RGBQUAD* GLWidget::GetKinectRGB()
@@ -43,62 +56,36 @@ RGBQUAD* GLWidget::GetKinectRGB()
 }
 void GLWidget::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 	glPushMatrix();
 
-    glPushMatrix();
-
-	glMatrixMode(GL_PROJECTION);
+ 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45,900/600,0.1,10000);
-	glMatrixMode(GL_MODELVIEW);
+ 	gluPerspective(45,1000/800,0.1,10000);
+    glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(600,500,4000+distance,0,0,0,0,1,0);
-	//gluLookAt(50,50,100,0,0,0,0,1,0);
-    //glRotated(0, 0, 400, 1700);
 
-	glPointSize(1);
+	CameraSet();
 	DrawCoordinateAxis();
-	glBegin(GL_POINTS);
-	{
-      int i = 0 ;
-	  for (int w  = 0 ; w < kdata->getnColorWidth() ; w ++ )
-		  for (int h = 0 ; h < kdata->getnColorHeight() ; h++)
-		  {   
-			   Colort = GetKinectRGB()[i++];
-			   red =Colort.rgbRed ;
-			   green =Colort.rgbGreen;
-			   blue = Colort.rgbBlue;
-			   if ( red >255 || green >255  ||  blue > 255)
-			   {
-				   red = 0;
-				   green=0;
-				   blue = 0;
-			   }
-			   red/=255;
-			   green/=255;
-			   blue/=255;
-		     glColor3f( blue,green,	red	 );
-	         glVertex3f((float)w,(float)h,0);
-		  }
-	       
-	}
-	glEnd();
-	
-    glPopMatrix();
+	Drawtest();
+
+
+	glPopMatrix();
 	swapBuffers();
+	
 }
 
 void GLWidget::resizeGL(int width, int height)
 {
-   // int side = qMin(width, height);
-    //glViewport((width - side) / 2, (height - side) / 2, side, side);
-	glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-1.0, +1.0, -1.0, 1.0, 5.0, 60.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslated(0.0, 0.0, -40.0);
+	int side = qMin(width, height);
+	glViewport((width - side) / 2, (height - side) / 2, side, side);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glFrustum(-1.0, +1.0, -1.0, 1.0, 5.0, 60.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslated(0.0, 0.0, -40.0);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -122,7 +109,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void GLWidget::wheelEvent(QWheelEvent * event)
 {
-    	distance+=event->delta()/20;
+    	distance+=event->delta()/120;
 		updateGL();
 }
 void GLWidget::normalizeAngle(int *angle)
@@ -186,13 +173,13 @@ void GLWidget::DrawCoordinateAxis()
 
 void GLWidget::DrawPointClould()
 {
-	int coordinate ;
-	for (coordinate = 0 ; coordinate < kdata->getDepthHeight() *kdata->getnDepthWidth() ; coordinate ++)
+	int colorIndex ;
+	for (colorIndex = 0 ; colorIndex < kdata->getDepthHeight() *kdata->getnDepthWidth() ; colorIndex ++)
 	{
-		/*
-		const RGBQUAD* pSrc = m_pBackgroundRGBX + colorIndex;
+		
+		const RGBQUAD* pSrc = Getm_pBackgroundRGBX() + colorIndex;
 
-		DepthSpacePoint p = m_pDepthCoordinates[colorIndex];
+		DepthSpacePoint p = GetDepthBuffer()[colorIndex];
 
 		// Values that are negative infinity means it is an invalid color to depth mapping so we
 		// skip processing for this pixel
@@ -215,10 +202,22 @@ void GLWidget::DrawPointClould()
 		}
 		// write output
 		m_pOutputRGBX[colorIndex] = *pSrc;
-		*/
+		
 	}
 }
 void GLWidget::Drawtest()
 {
+	glColor3f(1,0,0);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(25,0,0);
+	glVertex3f(0,25,0);
+	glVertex3f(0,0,25);
+	glEnd();
+}
+void GLWidget::CameraSet()
+{
+
+	gluLookAt(100,100,100,-100,-100,-100,1,0,0);
+	glPointSize(1);	
 
 }

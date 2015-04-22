@@ -5,7 +5,11 @@
 
 #include <QGLWidget>
 #include "KinectData.h"
-typedef  int  Eyeposition ;
+struct Daxis3{
+	int x;
+	int y;
+	int z;
+};
 class GLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -34,12 +38,13 @@ private:
 	void DrawCoordinateAxis();
 	void DrawPointClould();
 	void Drawtest();
+	void CameraSet();
 	
 	int distance;
 	float red,green,blue;
     QPoint lastPos;
 	RGBQUAD   Colort ;
-	Eyeposition  x,y,z,lookx,lookxy,lookz,rotatex,rotatey,rotatez;
+	Daxis3 CameraSite,CameraFace,CameraRotate;
 };
 
 #endif // GLWIDGET_H

@@ -30,14 +30,7 @@ MainWindow::MainWindow():
 
     QGridLayout *centralLayout = new QGridLayout;
     centralLayout->addWidget(glWidgetArea, 0, 0,1,1);
-  //  centralLayout->addWidget(pixmapLabelArea, 0, 1);
-  //  centralLayout->addWidget(xSlider, 1, 0, 1, 2);
- //   centralLayout->addWidget(ySlider, 2, 0, 1, 2);
-  ////  centralLayout->addWidget(zSlider, 3, 0, 1, 2);
     centralWidget->setLayout(centralLayout);
-
-
-
     setWindowTitle(tr("KPC"));
     resize(900, 600);
 
@@ -45,7 +38,7 @@ MainWindow::MainWindow():
 void MainWindow::refresh()
 {
 		glWidget->UpdateKinectData();
-		//glWidget->Paint();	
+
 }
 void MainWindow::renderIntoPixmap()
 {
@@ -75,19 +68,14 @@ void MainWindow::about()
 }
 void MainWindow::start()
 {
-	//glWidget->kdata->InitKinect();
-	//QMessageBox msgbox ;
-	//msgbox.setText("init kinect");
-	//msgbox.exec();
      if (started)	
 	{
 		QTimer *timer = new QTimer(this);
 	    connect(timer,SIGNAL(timeout()),this,SLOT(refresh()));
-	    timer->start(20);
-	    started=false;
+	    timer->start(200);
+	    //started=false;
 	}
-	 
-	
+
 
 }
 
