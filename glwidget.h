@@ -39,6 +39,7 @@ private:
 	void DrawPointClould();
 	void Drawtest();
 	void CameraSet();
+	void LookAt();
 	RGBQUAD * Getm_pBackgroundRGBX(){return kdata->Getm_pBackgroundRGBX();}
 	RGBQUAD * GetColorRGBX(){return kdata->GetColorRGBX();}
 	RGBQUAD*  GetOutputRGBX(){return kdata->GetOutputRGBX();}
@@ -84,6 +85,7 @@ private:
 	int yRot;
 	int zRot;
 	int gear1Rot;
+	double transx,transy;
 };
 
 #endif // GLWIDGET_H

@@ -42,10 +42,12 @@ Icon
 Network Trash Folder
 Temporary Items
 #dir
+
 Debug
 Release
 Win32
 x64
+
 *.pro
 *.sln
 *.vcxproj
@@ -54,4 +56,5 @@ x64
 *.suo
 *.filters
 *.sdf
-
+ipch
+*.ipch

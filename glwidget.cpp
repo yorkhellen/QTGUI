@@ -9,7 +9,9 @@
 #include <math.h>
 
 GLWidget::GLWidget(QWidget *parent)
-    : QGLWidget(parent)
+    : QGLWidget(parent),
+	transx(0),
+	transy(0)
 {
 	gear1 = 0;
 	gear2 = 0;
@@ -266,29 +268,28 @@ void GLWidget::initializeGL()
 	gear3 = makeGear(reflectance3, 1.3, 2.0, 0.5, 0.7, 10);
 
 	glEnable(GL_NORMALIZE);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	
+	//gluLookAt(0,0,2000,0,0,0,0,1,0);
 }
 
 void GLWidget::paintGL()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	DrawCoordinateAxis();
-
 	glPushMatrix();
+	glTranslated(transx,transy,distance);
 	glRotated(xRot / 16.0, 1.0, 0.0, 0.0);
 	glRotated(yRot / 16.0, 0.0, 1.0, 0.0);
 	glRotated(zRot / 16.0, 0.0, 0.0, 1.0);
-	// draw coordinate
 
 	glColor3f(0.0f,1.0f,0.0f);
-	drawGear(gear2, 0, 0, 0.0, 2.0 * (gear1Rot / 16.0) - 9.0);
-//	drawGear(gear1, -3.0, -2.0, 0.0, gear1Rot / 16.0);
-//	glColor3f(1.0f,0.0f,0.0f);
-//	drawGear(gear2, +3.1, -2.0, 0.0, -2.0 * (gear1Rot / 16.0) - 9.0);
-//	glRotated(+90.0, 1.0, 0.0, 0.0);
-//	glColor3f(0.0f,0.0f,1.0f);
-//	drawGear(gear3, -3.1, -1.8, -2.2, +2.0 * (gear1Rot / 16.0) - 2.0);
+	//drawGear(gear2, 0, 0, 0.0, 2.0 * (gear1Rot / 16.0) - 9.0);
+	drawGear(gear1, -3.0, -2.0, 0.0, gear1Rot / 16.0);
+	glColor3f(1.0f,0.0f,0.0f);	
+	drawGear(gear2, +3.1, -2.0, 0.0, -2.0 * (gear1Rot / 16.0) - 9.0);
+	glRotated(+90.0, 1.0, 0.0, 0.0);
+	glColor3f(0.0f,0.0f,1.0f);
+	drawGear(gear3, -3.1, -1.8, -2.2, +2.0 * (gear1Rot / 16.0) - 2.0);
 
 	glPopMatrix();
 }
@@ -315,13 +316,15 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
 	int dx = event->x() - lastPos.x();
 	int dy = event->y() - lastPos.y();
-
 	if (event->buttons() & Qt::LeftButton) {
+	
+		transx+=(double)dx/100;
+		transy-=(double)dy/100;
+		
+	} else if (event->buttons() & Qt::RightButton) {	
 		setXRotation(xRot + 8 * dy);
-		setYRotation(yRot + 8 * dx);
-	} else if (event->buttons() & Qt::RightButton) {
-		setXRotation(xRot + 8 * dy);
-		setZRotation(zRot + 8 * dx);
+        setYRotation(yRot + 8 * dx);
+		
 	}
 	lastPos = event->pos();
 }
@@ -436,4 +439,9 @@ void GLWidget::wheelEvent(QWheelEvent * event)
 {
 	distance+=event->delta()/120;
 	updateGL();
+}
+void GLWidget::LookAt()
+{
+	//gluLookAt(0,0,2000,0,0,0,0,1,0);
+	//gluLookAt(0,0,100,0,0,0,0,1,0);
 }
