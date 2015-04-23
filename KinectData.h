@@ -52,15 +52,18 @@ public:
 		const BYTE* pBodyIndexBuffer, int nBodyIndexWidth, int nBodyIndexHeight);
 	void KinectData::Update();
 	void KinectData::check_deth_frame();
-	int  KinectData::getColorHeight()  {return cColorHeight ;};
-	int  KinectData::getColorWidth()   {return cColorWidth ;};
-	int  KinectData::getDepthWidth()   {return cDepthWidth ;};
-	int  KinectData::getDepthHeight()  {return cDepthHeight ;};
-	int  KinectData::getnColorWidth()  {return nColorWidth ;};
-	int  KinectData::getnColorHeight()  {return nColorHeight ;};
-	int  KinectData::getnDepthWidth()  {return nDepthWidth ;};
-	int  KinectData::getnDepthHeight()  {return nDepthHeight ;};
-	RGBQUAD * KinectData::getColorRGBX();	
-		
+	int  KinectData::getColorHeight()  {return cColorHeight ;}
+	int  KinectData::getColorWidth()   {return cColorWidth ;}
+	int  KinectData::getDepthWidth()   {return cDepthWidth ;}
+	int  KinectData::getDepthHeight()  {return cDepthHeight ;}
+	int  KinectData::getnColorWidth()  {return nColorWidth ;}
+	int  KinectData::getnColorHeight()  {return nColorHeight ;}
+	int  KinectData::getnDepthWidth()  {return nDepthWidth ;}
+	int  KinectData::getnDepthHeight()  {return nDepthHeight ;}
+	RGBQUAD * KinectData::Getm_pBackgroundRGBX(){return m_pBackgroundRGBX;}
+	RGBQUAD * KinectData::GetColorRGBX(){return m_pColorRGBX;}
+	RGBQUAD*  KinectData::GetOutputRGBX(){return  m_pOutputRGBX;}
+	UINT16*   KinectData::GetDepthBuffer(){return   pDepthBuffer;}
+	BYTE*     KinectData::GetpBodyIndexBuffer(){return  pBodyIndexBuffer;}
 };
 

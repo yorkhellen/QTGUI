@@ -36,11 +36,6 @@ private:
     QSlider *createSlider(const char *changedSignal, const char *setterSlot);
     void setPixmap(const QPixmap &pixmap);
     QSize getSize();
-	RGBQUAD * Getm_pBackgroundRGBX(){return glWidget->kdata->Getm_pBackgroundRGBX();}
-	RGBQUAD * GetColorRGBX(){return glWidget->kdata->GetColorRGBX();}
-	RGBQUAD*  GetOutputRGBX(){return glWidget->kdata->GetOutputRGBX();}
-	UINT16*   GetDepthBuffer(){return glWidget->kdata->GetDepthBuffer();}
-	BYTE*     GetpBodyIndexBuffer(){return glWidget->kdata->GetpBodyIndexBuffer();}
 
     QWidget *centralWidget;
     QScrollArea *glWidgetArea;

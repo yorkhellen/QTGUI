@@ -332,10 +332,6 @@ void KinectData::check_deth_frame()
 {
 }
 
-RGBQUAD * KinectData::getColorRGBX()
-{
-	return m_pColorRGBX;
-}
 void KinectData::ProcessFrame(INT64 nTime, 
 							  const UINT16* pDepthBuffer, int nDepthWidth, int nDepthHeight, 
 							  const RGBQUAD* pColorBuffer, int nColorWidth, int nColorHeight,
